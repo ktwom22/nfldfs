@@ -1,7 +1,9 @@
-Flask==2.3.4
-gunicorn==23.2.1
-pandas==2.1.1
-pydfs-lineup-optimizer==1.6.3
-pulp==2.6.0
-requests==2.32.0
-numpy==1.26.2
+blinker==1.9.0
+click==8.3.0
+colorama==0.4.6
+Flask==3.1.2
+itsdangerous==2.2.0
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+PuLP==3.3.0
+Werkzeug==3.1.3
