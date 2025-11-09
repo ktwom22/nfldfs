@@ -1,0 +1,4 @@
+Flask==2.3.4
+pandas==2.1.1
+pydfs-lineup-optimizer==2.11.0
+gunicorn==21.2.0

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Generated Lineups</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f6fa;
+            color: #333;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #2f3640;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #4b7bec;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2f3640;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f1f2f6;
+        }
+
+        tr:hover {
+            background-color: #dcdde1;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            padding: 10px 16px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Generated Lineups</h2>
+
+    {% if warning %}
+        <p style="color: red;">{{ warning }}</p>
+    {% endif %}
+
+    {% if lineups %}
+        {% for lineup in lineups %}
+            <h3>Lineup {{ loop.index }}</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Slot</th>
+                        <th>Name</th>
+                        <th>Team</th>
+                        <th>POS</th>
+                        <th>Salary</th>
+                        <th>Adj Proj</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for slot, p in lineup %}
+                        <tr>
+                            <td>{{ slot }}</td>
+                            <td>{{ p.full_name }}</td>
+                            <td>{{ p.team }}</td>
+                            <td>{{ display_pos(p.positions) }}</td>
+                            <td>{{ p.salary }}</td>
+                            <td>{{ '%.2f'|format(p.fppg) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% else %}
+        <p>No lineups available. Adjust filters or try resetting.</p>
+    {% endif %}
+
+    <a href="{{ url_for('player_pool') }}">Back to Player Pool</a>
+</body>
+</html>

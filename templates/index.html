@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+    <title>DFS Lineup Generator</title>
+</head>
+<body>
+    <h1>DFS Lineup Generator</h1>
+    <form method="post">
+        <label>Select Slate:</label>
+        <select name="slate">
+            <option value="early">Early Only (1PM)</option>
+            <option value="classic">Classic (1PM - 5PM)</option>
+            <option value="late">Late (4PM - 4:59PM)</option>
+        </select>
+        <button type="submit">Generate Lineups</button>
+    </form>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    {% if lineups %}
+        <h2>Lineups</h2>
+        <ol>
+        {% for lineup in lineups %}
+            <li>
+                <ul>
+                {% for player in lineup.players %}
+                    <li>
+                        {{ player.full_name }}
+                        ({{ position_map[player.full_name]|default("N/A") }})
+                        - ${{ player.salary }}
+                        | Ownership: {{ ownership_map[player.full_name]|default("N/A") }}%
+                    </li>
+                {% endfor %}
+                </ul>
+                <strong>Total Salary:</strong> ${{ lineup.salary }}<br>
+                <strong>Projected Points:</strong> {{ lineup.fantasy_points_projection }}
+            </li>
+        {% endfor %}
+        </ol>
+    {% endif %}
+</body>
+</html>

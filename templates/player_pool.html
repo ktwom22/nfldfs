@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Player Pool</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f6fa;
+            color: #333;
+            margin: 20px;
+        }
+        h2 {
+            color: #2f3640;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        label {
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        select, input[type="number"], input[type="submit"], button {
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        input[type="submit"], button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #45a049;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #2f3640;
+            color: #fff;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f1f2f6;
+        }
+        tr:hover {
+            background-color: #dcdde1;
+        }
+
+        /* Checkboxes */
+        input[type="checkbox"] {
+            transform: scale(1.2);
+            margin: 0;
+        }
+
+        /* Responsive Table Wrapper */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        /* Stack Dropdown Section */
+        .stack-dropdown {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .stack-dropdown select, .stack-dropdown input[type="number"] {
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Player Pool</h2>
+
+    {% if warning %}
+        <p style="color: red;">{{ warning }}</p>
+    {% endif %}
+
+    <!-- 🔹 Stack & Filters Form -->
+    <form method="POST">
+        <input type="hidden" name="action" value="filter_or_generate">
+        <div class="stack-dropdown">
+            <div>
+                <label for="stack_team">Stack Team:</label>
+                <select name="stack_team" id="stack_team">
+                    <option value="">--None--</option>
+                    {% for team in teams %}
+                        <option value="{{ team }}" {% if stack_team == team %}selected{% endif %}>{{ team }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="time_filter">Game Time:</label>
+                <select name="time_filter" id="time_filter">
+                    <option value="all" {% if time_filter == "all" %}selected{% endif %}>All</option>
+                    <option value="1pm" {% if time_filter == "1pm" %}selected{% endif %}>1pm</option>
+                    <option value="late" {% if time_filter == "late" %}selected{% endif %}>Late (4pm+)</option>
+                </select>
+            </div>
+            <div>
+                <label for="num_lineups">Lineups:</label>
+                <input type="number" name="num_lineups" id="num_lineups" min="1" max="20" value="{{ num_lineups }}">
+            </div>
+            <div>
+                <button type="submit" name="reset" value="yes">Reset</button>
+                <input type="submit" name="action" value="generate_lineups" value="Generate Lineup(s)">
+            </div>
+        </div>
+    </form>
+
+    <!-- 🔹 Player Table -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Lock</th>
+                    <th>Exclude</th>
+                    {% for col in headers %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="lock_player" value="{{ row['unique_id'] }}"
+                                {% if row['unique_id'] in locked_players %}checked{% endif %}>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="exclude_player" value="{{ row['unique_id'] }}"
+                                {% if row['unique_id'] in excluded_players %}checked{% endif %}>
+                        </td>
+                        {% for col in headers %}
+                            <td>
+                                {% if col == "POS" %}
+                                    {{ display_pos(row.get(col, "")) }}
+                                {% else %}
+                                    {{ row.get(col, "") }}
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
