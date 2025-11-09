@@ -1,5 +1,7 @@
-pydfs-lineup-optimizer
-Flask
-pandas
-gunicorn
+Flask==2.3.4
+gunicorn==23.2.1
+pandas==2.1.1
+pydfs-lineup-optimizer==1.6.3
 pulp==2.6.0
+requests==2.32.0
+numpy==1.26.2
